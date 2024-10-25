@@ -2,4 +2,4 @@
 /tools/
 temp/temp.vpy
 
-vpy/__pycache__
+src/vpy/__pycache__

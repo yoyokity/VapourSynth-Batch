@@ -2,6 +2,7 @@ import os
 import sys
 import configparser
 
+from  pathlib import Path
 from vpy import Vpy
 
 
@@ -12,7 +13,7 @@ def read_ini(path) -> configparser.ConfigParser:
 
 
 # 设置工作目录
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(Path(__file__).resolve().parent.parent)
 
 if __name__ == '__main__':
     # 获取拖入的文件路径列表
@@ -28,7 +29,7 @@ if __name__ == '__main__':
             input_files[-1] = input_files[-1] + ' ' + i
 
     # 读取配置文件
-    config = read_ini('配置参数.ini')
+    config = read_ini('./配置参数.ini')
 
     #检查exe路径是否正确
     vsPipe_path = config.get('vapoursynth', 'vsPipe_path')

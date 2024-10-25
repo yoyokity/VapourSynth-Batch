@@ -14,13 +14,13 @@ if "%~1"=="" (
 )
 
 :: 确认 main.py 文件存在
-if not exist "%script_dir%main.py" (
+if not exist "%script_dir%/src/main.py" (
     echo 找不到 main.py 文件，请确认文件存在。
     pause
     exit /b
 )
 
 :: 运行 Python 脚本
-python "%script_dir%main.py" %*
+python "%script_dir%/src/main.py" %*
 
 pause

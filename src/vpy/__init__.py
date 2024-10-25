@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+from pathlib import Path
 from configparser import ConfigParser
 
 
@@ -11,11 +12,14 @@ class Vpy:
 
     def __init__(self, path: str):
         self.path = path
+        self.nvencc_path = Path(os.getcwd()).joinpath(r'tools\nvencc\NVEncC64.exe')
+        self.ffmpeg_path = Path(os.getcwd()).joinpath(r'tools\ffmpeg\ffmpeg.exe')
 
         self._copy()
         self._replace_string()
 
-    def _copy(self):
+    @staticmethod
+    def _copy():
         shutil.copy2(Vpy.source_file, Vpy.destination_file)
 
     def _replace_string(self):
@@ -47,7 +51,7 @@ class Vpy:
 
         cmd = [
             f'{vsPipe_path}', '--y4m', f'{Vpy.destination_file}', '-', '|',
-            r'tools/nvencc/NVEncC64.exe', '--y4m', '-i', '-', '-c', 'hevc', '--qvbr', f'{quality}',
+            f'{self.nvencc_path}', '--y4m', '-i', '-', '-c', 'hevc', '--qvbr', f'{quality}',
             '--preset', 'p7', '--lookahead', '12', '--output-depth', '10', '--profile', 'main10',
         ]
 
