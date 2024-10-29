@@ -78,7 +78,7 @@ class Vpy:
         if self.video_aq != '':
             nvencc_cmd.extend(['--aq', '--aq-strength', f'{self.video_aq}'])
 
-        #        判断是否添加音频
+        # 判断是否添加音频
         if self.audio_codec == '':
             cmd.extend([f'{self.nvencc_path}', '--y4m'])
             cmd.extend(nvencc_cmd)
