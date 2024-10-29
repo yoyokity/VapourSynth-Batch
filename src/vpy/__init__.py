@@ -61,25 +61,24 @@ class Vpy:
         else:
             output_file = os.path.join(self.video_output, f'[encoded]{input_filename_short}.{self.video_output_format}')
 
-
         # 命令
 
         # vspipe
         cmd = [f'{self.vs_vsPipe_path}', '--y4m', f'{Vpy.destination_file}', '-', '|']
-        #ffmpeg
-        ffmpeg_cmd=[f'{self.ffmpeg_path}','-f','yuv4mpegpipe',
-                    '-i','pipe:',
-                    '-i',f'{self.path}',
-                    '-map','0:v','-map','1:a',
-                    '-c:v','copy','-c:a','copy',
-                    '-f','nut','-','|']
+        # ffmpeg
+        ffmpeg_cmd = [f'{self.ffmpeg_path}', '-f', 'yuv4mpegpipe',
+                      '-i', 'pipe:',
+                      '-i', f'{self.path}',
+                      '-map', '0:v', '-map', '1:a',
+                      '-c:v', 'copy', '-c:a', 'copy',
+                      '-f', 'nut', '-', '|']
         # nvencc
         nvencc_cmd = ['-i', '-', '-c', 'hevc', '--qvbr', f'{self.video_quality}',
                       '--preset', 'p7', '--lookahead', '12', '--output-depth', '10', '--profile', 'main10']
         if self.video_aq != '':
             nvencc_cmd.extend(['--aq', '--aq-strength', f'{self.video_aq}'])
 
-#        判断是否添加音频
+        #        判断是否添加音频
         if self.audio_codec == '':
             cmd.extend([f'{self.nvencc_path}', '--y4m'])
             cmd.extend(nvencc_cmd)
@@ -88,11 +87,10 @@ class Vpy:
             cmd.extend(ffmpeg_cmd)
             cmd.extend([f'{self.nvencc_path}', '--avsw'])
             cmd.extend(nvencc_cmd)
-            cmd.extend(['--audio-codec',f'{self.audio_codec}',
-                        '--audio-bitrate',f'{self.audio_bitrate}',
-                        '--audio-samplerate',f'{self.audio_samplerate}'])
+            cmd.extend(['--audio-codec', f'{self.audio_codec}',
+                        '--audio-bitrate', f'{self.audio_bitrate}',
+                        '--audio-samplerate', f'{self.audio_samplerate}'])
             cmd.extend(['-o', f'{output_file}'])
-
 
         # 开始运行
         print(" ".join(cmd))
