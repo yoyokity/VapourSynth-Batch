@@ -8,20 +8,22 @@ core = vs.core
 video_src = r"$FILE_PATH$"
 
 core.max_cache_size = 9000  # 内存
-video_src = core.lsmas.LWLibavSource(video_src, format="yuv420p16")
+video = core.lsmas.LWLibavSource(video_src, format="yuv420p16")
+
+
+#改变大小
+#video = core.resize.Spline36(video, 1920, 1080)
+
 
 # 预降噪
-video = core.nlm_cuda.NLMeans(video_src, d=0, wmode=3, h=5)
+video = core.nlm_cuda.NLMeans(video, d=0, wmode=3, h=7)
+
 
 if True:
 	# 去色带
     video = core.neo_f3kdb.Deband(video, range=12, y=60, cb=24, cr=24, grainy=0, grainc=0, output_depth=16)
     video = core.neo_f3kdb.Deband(video, range=24, y=40, cb=16, cr=16, grainy=0, grainc=0, output_depth=16)
-#    video = core.neo_f3kdb.Deband(video, range=30, y=40, cb=16, cr=16, grainy=0, grainc=0, output_depth=16)
-
-
-    # 去色块
-    #    video = haf.Deblock_QED(video, quant1=24, quant2=26, aOff1=1, bOff1=2, aOff2=1, bOff2=2, uv=3)
+    
 
     # 去锯齿
     def aa_eedi2(clip):

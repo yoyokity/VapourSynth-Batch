@@ -1,5 +1,4 @@
 .idea
-/tools/
 temp/temp.vpy
 
 src/vpy/__pycache__
