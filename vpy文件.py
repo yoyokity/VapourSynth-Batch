@@ -1,4 +1,4 @@
-import vapoursynth as vs
+﻿import vapoursynth as vs
 import havsfunc as haf
 import mvsfunc as mvf
 import adjust
@@ -79,8 +79,19 @@ if True:
 
     video = aa_eedi2(video)
 
+    def dering_dehalo(clip):
+        """去振铃/去晕轮"""
+        return haf.FineDehalo(
+            clip,
+            rx=2.0,
+            ry=2.0
+        )
+
     # 锐化
     video = core.cas.CAS(video, sharpness=0.7)
+
+    # 去振铃/去晕轮
+    video = dering_dehalo(video)
 
 # 输出
 video.set_output(0)
