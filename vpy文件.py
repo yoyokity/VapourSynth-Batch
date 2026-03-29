@@ -7,25 +7,28 @@ core = vs.core
 
 video_src = r"$FILE_PATH$"
 
-core.max_cache_size = 9000  # 内存
 video = core.lsmas.LWLibavSource(video_src, format="yuv420p16")
 
+#帧切割
+#video = core.std.Trim(video, 182160, 224954)
 
-#改变大小
+#反交错
+#video = haf.QTGMC(video, Preset='slower', TFF=True,opencl=True, FPSDivisor=2)
+
+#改变视频尺寸
 #video = core.resize.Spline36(video, 1920, 1080)
 
 
-# 预降噪
-video = core.nlm_cuda.NLMeans(video, d=0, wmode=3, h=7)
-
-
 if True:
+    # 预降噪
+    降噪等级 = 5 # 一般3-8
+    video = core.nlm_cuda.NLMeans(video, d=0, wmode=3, h=降噪等级)
+
 	# 去色带
     video = core.neo_f3kdb.Deband(video, range=12, y=60, cb=24, cr=24, grainy=0, grainc=0, output_depth=16)
     video = core.neo_f3kdb.Deband(video, range=24, y=40, cb=16, cr=16, grainy=0, grainc=0, output_depth=16)
-    
 
-    # 去锯齿
+    # 去锯齿，通常都用第一个，第三个除非是锯齿超级大不然别用
     def aa_eedi2(clip):
         """适用于比较糊的源"""
         w = clip.width
