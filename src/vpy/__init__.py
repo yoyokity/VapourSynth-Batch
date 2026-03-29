@@ -1,8 +1,10 @@
 import os
 import shutil
 import subprocess
-from pathlib import Path
 from configparser import ConfigParser
+from pathlib import Path
+
+from vpy.extract_chapter import extract_chapter
 
 
 class Vpy:
@@ -15,6 +17,10 @@ class Vpy:
         Vpy.source_file = vpy_file
         self.nvencc_path = Path(os.getcwd()).joinpath(r'tools\nvencc\NVEncC64.exe')
         self.ffmpeg_path = Path(os.getcwd()).joinpath(r'tools\ffmpeg\ffmpeg.exe')
+        self.mkvextract_path = Path(os.getcwd()).joinpath(r'tools\mkv\mkvextract.exe')
+        self.mkvmerge_path = Path(os.getcwd()).joinpath(r'tools\mkv\mkvmerge.exe')
+
+        self.章节文件缓存 = Path(os.getcwd()).joinpath(r'temp\chapters.xml')
 
         self._copy()
         self._replace_string()
@@ -44,6 +50,8 @@ class Vpy:
         self.video_output_format = config.get('video', 'output_format')
         self.video_quality = config.get('video', 'quality')
         self.video_aq = config.get('video', 'aq')
+        self.video_chapter_copy = config.getboolean('video', 'chapter_copy', fallback=True)
+        self.video_key_on_chapter = config.getboolean('video', 'key_on_chapter', fallback=True)
 
         # audio相关
         self.audio_codec = config.get('audio', 'codec')
@@ -77,6 +85,10 @@ class Vpy:
                       '--preset', 'p7', '--lookahead', '12', '--output-depth', '10', '--profile', 'main10']
         if self.video_aq != '':
             nvencc_cmd.extend(['--aq', '--aq-strength', f'{self.video_aq}'])
+        if self.video_chapter_copy:
+            nvencc_cmd.extend(['--chapter', f'{self.章节文件缓存}'])
+        if self.video_key_on_chapter:
+            nvencc_cmd.extend(['--key-on-chapter'])
 
         # 判断是否添加音频
         if self.audio_codec == '':
@@ -92,9 +104,14 @@ class Vpy:
                         '--audio-samplerate', f'{self.audio_samplerate}'])
             cmd.extend(['-o', f'{output_file}'])
 
+        # 提取章节到temp
+        if self.video_chapter_copy:
+            extract_chapter(self.ffmpeg_path, self.mkvextract_path, self.path, self.章节文件缓存)
+
         # 开始运行
         print(" ".join(cmd))
         subprocess.run(cmd, shell=True)
 
         # 删除临时文件
         os.remove(Vpy.destination_file)
+        os.remove(self.章节文件缓存)

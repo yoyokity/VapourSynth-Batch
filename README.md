@@ -16,8 +16,6 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 uv venv
 ```
 
-
-
 ## 1. 提前安装 VapourSynth
 
 使用前请先安装VapourSynth 工具包：
@@ -27,8 +25,6 @@ https://github.com/AmusementClub/tools/releases
 请下载并安装 `vapoursynth_cpu+cuda` 版本。
 
 安装完成后，在 `配置参数.ini` 中把 `VSPipe_path` 修改为你本机 `VSPipe.exe` 的实际路径。
-
-
 
 ## 2. 修改编码相关参数
 
@@ -44,8 +40,6 @@ https://github.com/AmusementClub/tools/releases
 - VSPipe 路径
 - vpy 文件路径
 
-
-
 ## 3. 修改视频修复相关参数
 
 视频修复、滤镜处理相关参数在 `vpy文件.py` 中修改。
@@ -57,8 +51,6 @@ https://github.com/AmusementClub/tools/releases
 - 抗锯齿
 - 锐化
 - 其他 VapourSynth 处理参数
-
-
 
 ## 4. 开始处理视频
 
