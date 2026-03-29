@@ -5,7 +5,7 @@ chcp 65001
 set script_dir=%~dp0
 
 :: 激活虚拟环境
-call "%script_dir%venv\Scripts\activate"
+call "%script_dir%.venv\Scripts\activate"
 
 if "%~1"=="" (
     echo 请将多个文件拖放到此批处理文件上。

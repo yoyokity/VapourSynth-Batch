@@ -2,7 +2,23 @@
 
 本工具的使用方式很简单，按下面顺序操作即可。
 
-## 0. 提前安装 VapourSynth
+## 0. 使用 uv 安装环境
+
+建议先安装 `uv`：
+
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+然后在项目目录创建venv虚拟环境：
+
+```bash
+uv venv
+```
+
+
+
+## 1. 提前安装 VapourSynth
 
 使用前请先安装VapourSynth 工具包：
 
@@ -12,7 +28,9 @@ https://github.com/AmusementClub/tools/releases
 
 安装完成后，在 `配置参数.ini` 中把 `VSPipe_path` 修改为你本机 `VSPipe.exe` 的实际路径。
 
-## 1. 修改编码相关参数
+
+
+## 2. 修改编码相关参数
 
 编码相关参数在 `配置参数.ini` 中修改。
 
@@ -26,7 +44,9 @@ https://github.com/AmusementClub/tools/releases
 - VSPipe 路径
 - vpy 文件路径
 
-## 2. 修改视频修复相关参数
+
+
+## 3. 修改视频修复相关参数
 
 视频修复、滤镜处理相关参数在 `vpy文件.py` 中修改。
 
@@ -38,7 +58,9 @@ https://github.com/AmusementClub/tools/releases
 - 锐化
 - 其他 VapourSynth 处理参数
 
-## 3. 开始处理视频
+
+
+## 4. 开始处理视频
 
 把需要处理的视频文件直接拖到 `将一个或多个视频文件拖上来.bat` 上即可开始处理。
 
