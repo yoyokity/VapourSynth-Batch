@@ -71,6 +71,11 @@ class Vpy:
 
         # 命令
 
+        # 提取章节到temp
+        has_chapter = False
+        if self.video_chapter_copy:
+            has_chapter = extract_chapter(self.ffmpeg_path, self.mkvextract_path, self.path, self.章节文件缓存)
+
         # vspipe
         cmd = [f'{self.vs_vsPipe_path}', '--y4m', f'{Vpy.destination_file}', '-', '|']
         # ffmpeg
@@ -85,9 +90,9 @@ class Vpy:
                       '--preset', 'p7', '--lookahead', '12', '--output-depth', '10', '--profile', 'main10']
         if self.video_aq != '':
             nvencc_cmd.extend(['--aq', '--aq-strength', f'{self.video_aq}'])
-        if self.video_chapter_copy:
+        if self.video_chapter_copy and has_chapter:
             nvencc_cmd.extend(['--chapter', f'{self.章节文件缓存}'])
-        if self.video_key_on_chapter:
+        if self.video_key_on_chapter and has_chapter:
             nvencc_cmd.extend(['--key-on-chapter'])
 
         # 判断是否添加音频
@@ -104,9 +109,6 @@ class Vpy:
                         '--audio-samplerate', f'{self.audio_samplerate}'])
             cmd.extend(['-o', f'{output_file}'])
 
-        # 提取章节到temp
-        if self.video_chapter_copy:
-            extract_chapter(self.ffmpeg_path, self.mkvextract_path, self.path, self.章节文件缓存)
 
         # 开始运行
         print(" ".join(cmd))
@@ -114,4 +116,5 @@ class Vpy:
 
         # 删除临时文件
         os.remove(Vpy.destination_file)
-        os.remove(self.章节文件缓存)
+        if  has_chapter:
+            os.remove(self.章节文件缓存)

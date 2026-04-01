@@ -16,7 +16,7 @@ video = core.lsmas.LWLibavSource(video_src, format="yuv420p16")
 # video = haf.QTGMC(video, Preset='slower', TFF=True,opencl=True, FPSDivisor=2)
 
 # 改变视频尺寸
-video = core.resize.Spline36(video, 1920, 1080)
+#video = core.resize.Spline36(video, 1920, 1080)
 
 if True:
     # 预降噪

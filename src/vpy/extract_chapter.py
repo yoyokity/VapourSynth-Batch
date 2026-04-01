@@ -1,4 +1,5 @@
-﻿import subprocess
+﻿import os
+import subprocess
 from fractions import Fraction
 
 
@@ -48,8 +49,8 @@ def _parse_ffmetadata_chapters(metadata_text: str):
     return chapters
 
 
-def extract_chapter(ffmpeg_path: str, mkvextract_path: str, input_file: str, output_file: str):
-    """提取章节文件"""
+def extract_chapter(ffmpeg_path: str, mkvextract_path: str, input_file: str, output_file: str) -> bool:
+    """提取章节文件，返回是否成功提取到章节"""
 
     if input_file.lower().endswith('.mkv'):
         # 处理 mkv 文件
@@ -62,6 +63,15 @@ def extract_chapter(ffmpeg_path: str, mkvextract_path: str, input_file: str, out
 
         print(' '.join(cmd))
         subprocess.run(cmd, shell=True)
+
+        # 检查是否生成了章节文件且文件不为空
+        if os.path.exists(output_file) and os.path.getsize(output_file) > 0:
+            return True
+        else:
+            # 如果没有章节，删除空文件（如果有）并返回 False
+            if os.path.exists(output_file):
+                os.remove(output_file)
+            return False
     else:
         # 处理其他格式的文件
         cmd = [
@@ -75,6 +85,9 @@ def extract_chapter(ffmpeg_path: str, mkvextract_path: str, input_file: str, out
         result = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8', errors='ignore')
         chapters = _parse_ffmetadata_chapters(result.stdout)
 
+        if not chapters:
+            return False
+
         with open(output_file, 'w', encoding='utf-8') as file:
             for index, chapter in enumerate(chapters, start=1):
                 timebase = Fraction(chapter['timebase'])
@@ -84,3 +97,5 @@ def extract_chapter(ffmpeg_path: str, mkvextract_path: str, input_file: str, out
 
                 file.write(f'CHAPTER{index:02d}={timestamp}\n')
                 file.write(f'CHAPTER{index:02d}NAME={title}\n')
+
+        return True
